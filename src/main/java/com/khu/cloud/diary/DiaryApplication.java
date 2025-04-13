@@ -1,4 +1,4 @@
-package com.khu.cloud.diary.diary;
+package com.khu.cloud.diary;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
