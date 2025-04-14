@@ -9,23 +9,19 @@ import com.khu.cloud.diary.member.util.JwtUtil;
 
 import java.time.LocalDateTime;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
 
-    @Autowired
     private final MemberRepository memberRepository;
 
-    @Autowired
     private final JwtUtil jwtUtil;
 
-    @Autowired
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthService(MemberRepository memberRepository, JwtUtil jwtUtil, BCryptPasswordEncoder passwordEncoder) {
+    public AuthService(MemberRepository memberRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
