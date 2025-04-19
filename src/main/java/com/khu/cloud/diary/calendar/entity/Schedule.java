@@ -18,7 +18,6 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long scheduleId;
 
-    @Id
     @Column(nullable = false)
     private Long userId;
 
@@ -30,5 +29,18 @@ public class Schedule {
 
     @Column(nullable = true)
     private String emotion_icon;
+
+    public Schedule(Long userId, Date date, String content, String emotion_icon){
+        this.userId = userId;
+        this.date = date;
+        this.content = content;
+        this.emotion_icon = emotion_icon;
+    }
+
+    public void updateSchedule(Date date, String content, String emotion_icon){
+        this.date = date;
+        this.content = content;
+        this.emotion_icon = emotion_icon;
+    }
     
 }
