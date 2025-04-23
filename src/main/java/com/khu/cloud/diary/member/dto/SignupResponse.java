@@ -1,4 +1,5 @@
-// SignupResponse.java (응답 DTO)
+// member/dto/SignupResponse.java
+
 package com.khu.cloud.diary.member.dto;
 
 import lombok.Getter;

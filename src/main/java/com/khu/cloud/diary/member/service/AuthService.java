@@ -1,3 +1,5 @@
+// member/service/AuthService.java
+
 package com.khu.cloud.diary.member.service;
 
 import com.khu.cloud.diary.member.dto.AuthRequest;
