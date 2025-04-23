@@ -1,3 +1,5 @@
+// posts/util/S3UploadService.java
+
 package com.khu.cloud.diary.posts.util;
 
 import software.amazon.awssdk.services.s3.S3Client;
