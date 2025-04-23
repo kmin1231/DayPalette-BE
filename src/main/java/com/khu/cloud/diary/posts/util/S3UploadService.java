@@ -7,9 +7,10 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.UUID;
 
 
 @Service
@@ -24,11 +25,12 @@ public class S3UploadService {
         this.s3Client = s3Client;
     }
 
-    public String upload(MultipartFile image) {
+    // multipart file upload
+    public String uploadMultipartFile(MultipartFile image, String userId) {
         try {
             // generate unique file name
-            String fileName = generateUniqueFileName(image.getOriginalFilename());
-
+            String fileName = FileNameGenerator.generateFileName(userId);
+            
             // upload file to S3
             try (InputStream inputStream = image.getInputStream()) {
                 PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -36,27 +38,40 @@ public class S3UploadService {
                         .key(fileName)
                         .contentType(image.getContentType())
                         .build();
-
+    
                 s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, image.getSize()));
             }
 
             // return file URL
-            return s3Client.utilities().getUrl(builder -> builder.bucket(bucketName).key(fileName)).toString();
-
-        } catch (S3Exception | IOException e) {
+            return getFileUrl(fileName);
+    
+        } catch (IOException | S3Exception e) {
             throw new RuntimeException("Upload failed: " + e.getMessage());
         }
     }
 
-    private String generateUniqueFileName(String originalFileName) {
-        String uuid = UUID.randomUUID().toString();
-        String extension = "";
-
-        // extract file extension
-        if (originalFileName != null && originalFileName.contains(".")) {
-            extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+    // image binary data upload
+    public String uploadImageBytes(byte[] imageBytes, String userId, String originalFileName, String contentType) {
+        try (InputStream inputStream = new ByteArrayInputStream(imageBytes)) {
+            String fileName = FileNameGenerator.generateFileName(userId);
+    
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(fileName)
+                    .contentType(contentType != null ? contentType : "image/png")
+                    .build();
+    
+            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, imageBytes.length));
+            return getFileUrl(fileName);
+    
+        } catch (IOException | S3Exception e) {
+            throw new RuntimeException("Upload failed: " + e.getMessage());
         }
+    }
 
-        return uuid + extension;
+    private String getFileUrl(String fileName) {
+        return s3Client.utilities()
+                .getUrl(builder -> builder.bucket(bucketName).key(fileName))
+                .toString();
     }
 }
