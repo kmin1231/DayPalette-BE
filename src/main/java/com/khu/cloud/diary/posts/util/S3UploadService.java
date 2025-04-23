@@ -26,10 +26,10 @@ public class S3UploadService {
     }
 
     // multipart file upload
-    public String uploadMultipartFile(MultipartFile image, String userId) {
+    public String uploadMultipartFile(MultipartFile image, String email) {
         try {
             // generate unique file name
-            String fileName = FileNameGenerator.generateFileName(userId);
+            String fileName = FileNameGenerator.generateFileName(email);
             
             // upload file to S3
             try (InputStream inputStream = image.getInputStream()) {
@@ -51,9 +51,9 @@ public class S3UploadService {
     }
 
     // image binary data upload
-    public String uploadImageBytes(byte[] imageBytes, String userId, String originalFileName, String contentType) {
+    public String uploadImageBytes(byte[] imageBytes, String email, String originalFileName, String contentType) {
         try (InputStream inputStream = new ByteArrayInputStream(imageBytes)) {
-            String fileName = FileNameGenerator.generateFileName(userId);
+            String fileName = FileNameGenerator.generateFileName(email);
     
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
