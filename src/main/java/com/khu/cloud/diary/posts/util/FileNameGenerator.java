@@ -1,3 +1,5 @@
+// posts/util/FileNameGenerator.java
+
 package com.khu.cloud.diary.posts.util;
 
 import java.time.LocalDateTime;
