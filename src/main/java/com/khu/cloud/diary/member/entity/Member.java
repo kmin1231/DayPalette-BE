@@ -1,4 +1,4 @@
-// src/main/java/com/khu/cloud/diary/member/entity/Member.java
+// member/entity/Member.java
 
 package com.khu.cloud.diary.member.entity;
 
@@ -19,7 +19,7 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
 
     @Column(unique = true, nullable = false)
     private String email;

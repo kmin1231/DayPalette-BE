@@ -1,3 +1,5 @@
+// member/dto/SignupRequest.java
+
 package com.khu.cloud.diary.member.dto;
 
 import lombok.Getter;

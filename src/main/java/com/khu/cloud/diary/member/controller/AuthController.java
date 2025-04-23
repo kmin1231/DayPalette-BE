@@ -1,3 +1,5 @@
+// member/controller/AuthController.java
+
 package com.khu.cloud.diary.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,7 +37,7 @@ public class AuthController {
     @Operation(summary = "user signup", description = "create a new user")
     public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest signupRequest) {
         Member createdMember = authService.signup(signupRequest);
-        SignupResponse response = new SignupResponse(createdMember.getId(), createdMember.getEmail(), createdMember.getNickname());
+        SignupResponse response = new SignupResponse(createdMember.getUserId(), createdMember.getEmail(), createdMember.getNickname());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
