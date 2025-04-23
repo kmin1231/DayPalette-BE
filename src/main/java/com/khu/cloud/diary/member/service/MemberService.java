@@ -7,6 +7,7 @@ import com.khu.cloud.diary.member.repository.MemberRepository;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 
 @Service
 public class MemberService {
@@ -25,11 +26,13 @@ public class MemberService {
 
             String encodedPassword = passwordEncoder.encode("cloudcomputing");
 
-            Member temporaryUser = new Member(
-                "daypalette@cloud.com",  // email
-                encodedPassword,     // password
-                "daypalette"          // nickname
-            );
+            Member temporaryUser = Member.builder()
+                .email("daypalette@cloud.com")    // email
+                .password(encodedPassword)              // password
+                .nickname("daypalette")        // nickname
+                .createdAt(LocalDateTime.now())
+                .build();
+
             memberRepository.save(temporaryUser);
             System.out.println("Temporary user created: daypalette@cloud.com, cloudcomputing");
         } else {
