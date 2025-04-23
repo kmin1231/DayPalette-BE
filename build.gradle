@@ -37,13 +37,18 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 	implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
 
+	// JWT
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
+	// AWS
 	implementation 'software.amazon.awssdk:s3:2.29.6'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	// webclient
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
 
 tasks.named('test') {
