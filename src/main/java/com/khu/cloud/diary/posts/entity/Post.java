@@ -7,6 +7,8 @@ import lombok.*;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.khu.cloud.diary.member.entity.Member;
+
 @Entity
 @Table(name = "posts")  // table name
 @Getter
@@ -20,6 +22,10 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // auto increment
     private Long postId;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Member user;
+
     @Column(nullable = false)
     private String diaryText;
 
@@ -32,4 +38,12 @@ public class Post {
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean isShared = false;  // default
+
+    @Column(nullable = false)
+    @Builder.Default
+    private int likeCount = 0;  // default
 }
