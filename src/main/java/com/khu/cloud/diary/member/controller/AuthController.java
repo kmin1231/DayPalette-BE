@@ -1,3 +1,5 @@
+// member/controller/AuthController.java
+
 package com.khu.cloud.diary.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,22 +34,22 @@ public class AuthController {
     // }
 
     @PostMapping("/signup")
-    @Operation(summary = "User signup", description = "create a new user")
+    @Operation(summary = "user signup", description = "create a new user")
     public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest signupRequest) {
         Member createdMember = authService.signup(signupRequest);
-        SignupResponse response = new SignupResponse(createdMember.getId(), createdMember.getEmail(), createdMember.getNickname());
+        SignupResponse response = new SignupResponse(createdMember.getUserId(), createdMember.getEmail(), createdMember.getNickname());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
-    @Operation(summary = "User login", description = "authenticate user & generate JWT token")
+    @Operation(summary = "user login", description = "authenticate user & generate JWT token")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
         AuthResponse authResponse = authService.login(authRequest);
         return ResponseEntity.status(HttpStatus.OK).body(authResponse);
     }
 
     @PostMapping("/logout")
-    @Operation(summary = "User logout", description = "logout")
+    @Operation(summary = "user logout", description = "logout")
     public ResponseEntity<String> logout() {
         // [client] removeItem("jwtToken") 등으로 token 삭제
         return ResponseEntity.ok("Logged out successfully");
