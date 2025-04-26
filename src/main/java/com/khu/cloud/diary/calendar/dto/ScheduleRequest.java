@@ -12,6 +12,7 @@ public class ScheduleRequest {
     @Nullable
     private Long scheduleId;
 
+    private Long userId;
     private Date date;
     private String Content;
     private String emotionIcon;

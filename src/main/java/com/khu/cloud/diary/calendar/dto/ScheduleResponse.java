@@ -12,4 +12,11 @@ public class ScheduleResponse {
     private Date date;
     private String content;
     private String emotionIcon;
+
+    public ScheduleResponse(Long scheduleId, String content, Date date, String emotionIcon){
+        this.scheduleId = scheduleId;
+        this.content = content;
+        this.date = date;
+        this.emotionIcon = emotionIcon;
+    }
 }

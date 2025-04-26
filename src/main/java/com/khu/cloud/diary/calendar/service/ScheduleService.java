@@ -1,5 +1,6 @@
 package com.khu.cloud.diary.calendar.service;
 
+import com.khu.cloud.diary.calendar.dto.ScheduleRequest;
 import com.khu.cloud.diary.calendar.entity.Schedule;
 import com.khu.cloud.diary.calendar.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,14 @@ public class ScheduleService {
         this.scheduleRepository = scheduleRepository;
     }
 
-    public Schedule saveSchedule(Long userId, Date date, String content, String emotion_icon){
-        return scheduleRepository.save(new Schedule(userId, date, content, emotion_icon));
+    public Schedule saveSchedule(ScheduleRequest scheduleRequest){
+        Schedule newSchedule = new Schedule();
+
+        newSchedule.setContent(scheduleRequest.getContent());
+        newSchedule.setDate(scheduleRequest.getDate());
+        newSchedule.setEmotion_icon(scheduleRequest.getEmotionIcon());
+        newSchedule.setUserId(scheduleRequest.getUserId());
+        return scheduleRepository.save(newSchedule);
     }
 
     public List<Schedule> getAllSchedule(){
@@ -34,14 +41,16 @@ public class ScheduleService {
         return scheduleRepository.findByDate(date);
     }
 
-    public Schedule editSchedule(Long scheduleId, Date date, String content, String emotion_icon){
+    public Schedule editSchedule(ScheduleRequest scheduleRequest){
         Schedule schedule;
+        Long scheduleId = scheduleRequest.getScheduleId();
         if (scheduleRepository.findByScheduleId(scheduleId).isPresent())
             schedule = scheduleRepository.findByScheduleId(scheduleId).get();
         else
             return null;
 
-        schedule.updateSchedule(date, content, emotion_icon);
+        schedule.updateSchedule(scheduleRequest.getDate(), scheduleRequest.getContent(),
+                                scheduleRequest.getEmotionIcon());
         return scheduleRepository.save(schedule);
     }
 
