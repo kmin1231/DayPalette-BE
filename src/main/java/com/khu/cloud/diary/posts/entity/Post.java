@@ -5,6 +5,9 @@ package com.khu.cloud.diary.posts.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.khu.cloud.diary.member.entity.Member;
@@ -46,4 +49,19 @@ public class Post {
     @Column(nullable = false)
     @Builder.Default
     private int likeCount = 0;  // default
+
+
+    // post에 '좋아요' 피드백을 남긴 사용자 목록을 저장하기 위한 'ManyToMany' 관계 설정
+    @ManyToMany
+    @JoinTable(
+        name = "post_likes",
+        joinColumns = @JoinColumn(name = "post_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @Builder.Default
+    private Set<Member> likedUsers = new HashSet<>();
+
+    public Set<Member> getLikedUsers() {
+        return likedUsers;
+    }
 }
