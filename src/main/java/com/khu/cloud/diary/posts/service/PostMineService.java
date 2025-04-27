@@ -11,6 +11,9 @@ import com.khu.cloud.diary.member.util.JwtUtil;
 import com.khu.cloud.diary.core.exception.CoreException;
 import com.khu.cloud.diary.core.exception.ExceptionType;
 import com.khu.cloud.diary.core.response.ApiResponse;
+
+import static com.khu.cloud.diary.posts.util.AuthUtil.resolveTokenFromRequest;
+
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
@@ -30,7 +33,7 @@ public class PostMineService {
 
     @Transactional(readOnly = true)
     public ApiResponse<List<PostMineResponse>> getMyPosts() {
-        String token = resolveTokenFromRequest();
+        String token = resolveTokenFromRequest(request);
         String email = jwtUtil.extractEmail(token);
 
         Member member = memberRepository.findByEmail(email)
@@ -51,13 +54,5 @@ public class PostMineService {
                 .collect(Collectors.toList());
 
         return ApiResponse.success(postResponses);
-    }
-
-    private String resolveTokenFromRequest() {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        throw new CoreException(ExceptionType.INVALID_TOKEN);
     }
 }
