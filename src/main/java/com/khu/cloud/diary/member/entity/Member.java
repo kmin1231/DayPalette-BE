@@ -36,4 +36,8 @@ public class Member {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
+
+    public Long getUserId() {
+        return userId;
+    }
 }
