@@ -22,6 +22,8 @@ public class PostController {
     private final PostDetailService postDetailService;
     private final PostUpdateService postUpdateService;
     private final PostShareUpdateService postShareUpdateService;
+    private final PostDeleteService postDeleteService;
+    private final PostLikeService postLikeService;
 
     // 사용자의 post 조회
     @GetMapping("/mine")
@@ -50,5 +52,23 @@ public class PostController {
                                                                 @RequestBody PostShareUpdateRequest request,
                                                                 HttpServletRequest httpServletRequest) {
         return postShareUpdateService.updatePostShare(postId, request, httpServletRequest);
+    }
+
+    // 특정 post 삭제
+    @DeleteMapping("/{postId}")
+    public ApiResponse<PostDeleteResponse> deletePost(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
+        return postDeleteService.deletePost(postId, httpServletRequest);
+    }
+
+    // 특정 post에 대해 '좋아요' 피드백 추가
+    @PostMapping("/{postId}/like")
+    public ApiResponse<PostLikeResponse> likePost(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
+        return postLikeService.likePost(postId, httpServletRequest);
+    }
+
+    // 특정 post에 대한 '좋아요' 피드백 취소
+    @DeleteMapping("/{postId}/like")
+    public ApiResponse<PostLikeResponse> unlikePost(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
+        return postLikeService.likePost(postId, httpServletRequest);
     }
 }
