@@ -20,15 +20,35 @@ public class PostController {
 
     private final PostMineService postmMineService;
     private final PostDetailService postDetailService;
+    private final PostUpdateService postUpdateService;
+    private final PostShareUpdateService postShareUpdateService;
 
+    // 사용자의 post 조회
     @GetMapping("/mine")
     public ResponseEntity<ApiResponse<List<PostMineResponse>>> getMyPosts() {
         ApiResponse<List<PostMineResponse>> myPosts = postmMineService.getMyPosts();
         return ResponseEntity.ok(myPosts);
     }
 
+    // 특정 post 조회
     @GetMapping("/{postId}")
     public ApiResponse<PostDetailResponse> getPostDetail(@PathVariable Long postId, HttpServletRequest request) {
         return postDetailService.getPostDetail(postId, request);
+    }
+
+    // [PUT] 특정 post 수정
+    @PutMapping("/{postId}/update")
+    public ApiResponse<PostUpdateResponse> updatePost(@PathVariable Long postId, 
+                                                      @RequestBody PostUpdateRequest request,
+                                                      HttpServletRequest httpServletRequest) {
+        return postUpdateService.updatePost(postId, request, httpServletRequest);
+    }
+
+    // [PATCH] 특정 post의 공개 여부만 수정
+    @PatchMapping("/{postId}/share")
+    public ApiResponse<PostShareUpdateResponse> updatePostShare(@PathVariable Long postId,
+                                                                @RequestBody PostShareUpdateRequest request,
+                                                                HttpServletRequest httpServletRequest) {
+        return postShareUpdateService.updatePostShare(postId, request, httpServletRequest);
     }
 }
