@@ -75,6 +75,6 @@ public class PostController {
     // 특정 post에 대한 '좋아요' 피드백 취소
     @DeleteMapping("/{postId}/like")
     public ApiResponse<PostLikeResponse> unlikePost(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
-        return postLikeService.likePost(postId, httpServletRequest);
+        return postLikeService.unlikePost(postId, httpServletRequest);
     }
 }
