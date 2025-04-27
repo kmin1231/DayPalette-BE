@@ -27,6 +27,23 @@ public class PostLikeService {
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
 
+    @Transactional(readOnly = true)
+    public ApiResponse<Boolean> checkIfPostLiked(Long postId, HttpServletRequest request) {
+        String token = resolveTokenFromRequest(request);
+        String email = jwtUtil.extractEmail(token);
+
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new CoreException(ExceptionType.USER_NOT_FOUND));
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CoreException(ExceptionType.POST_NOT_FOUND));
+
+        // 해당 사용자가 좋아요를 눌렀는지 여부 확인
+        boolean isLiked = post.getLikedUsers().contains(member);
+
+        return ApiResponse.success(isLiked);    // return 'true' or 'false'
+    }
+
     @Transactional
     public ApiResponse<PostLikeResponse> likePost(Long postId, HttpServletRequest httpServletRequest) {
         String token = resolveTokenFromRequest(httpServletRequest);
@@ -40,7 +57,12 @@ public class PostLikeService {
 
         // 해당 post에 이미 '좋아요'를 눌렀는지 확인
         if (post.getLikedUsers().contains(member)) {
-            throw new CoreException(ExceptionType.POST_ALREADY_LIKED);
+            return ApiResponse.success(PostLikeResponse.builder()
+                    .postId(post.getPostId())
+                    .liked(true)
+                    .likeCount(post.getLikeCount())
+                    .message("Already liked.")
+                    .build());
         }
 
         // '좋아요' 추가
@@ -49,18 +71,6 @@ public class PostLikeService {
         // update like count
         post.setLikeCount(post.getLikedUsers().size());
         
-        postRepository.save(post);
-
-
-        // boolean liked = !post.getLikedUsers().contains(member);
-        // if (liked) {
-        //     post.getLikedUsers().add(member);
-        // } else {
-        //     post.getLikedUsers().remove(member);
-        // }
-
-        post.setLikeCount(post.getLikedUsers().size());
-
         postRepository.save(post);
 
         PostLikeResponse response = PostLikeResponse.builder()
@@ -86,7 +96,12 @@ public class PostLikeService {
 
         // 해당 post에 좋아요를 눌렀는지 확인
         if (!post.getLikedUsers().contains(member)) {
-            throw new CoreException(ExceptionType.POST_NOT_LIKED);
+            return ApiResponse.success(PostLikeResponse.builder()
+                    .postId(post.getPostId())
+                    .liked(false)
+                    .likeCount(post.getLikeCount())
+                    .message("Post not liked.")
+                    .build());
         }
 
         // '좋아요' 취소
