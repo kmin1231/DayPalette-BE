@@ -1,4 +1,4 @@
-// posts/service/PostReadService.java
+// posts/service/PostMineService.java
 
 package com.khu.cloud.diary.posts.service;
 
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PostReadService {
+public class PostMineService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
