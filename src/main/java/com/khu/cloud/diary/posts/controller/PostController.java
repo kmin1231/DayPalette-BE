@@ -60,6 +60,12 @@ public class PostController {
         return postDeleteService.deletePost(postId, httpServletRequest);
     }
 
+    // 특정 post에 대한 '좋아요' 여부 확인
+    @GetMapping("/{postId}/like/status")
+    public ApiResponse<Boolean> getPostLikeStatus(@PathVariable Long postId, HttpServletRequest request) {
+        return postLikeService.checkIfPostLiked(postId, request);
+    }
+
     // 특정 post에 대해 '좋아요' 피드백 추가
     @PostMapping("/{postId}/like")
     public ApiResponse<PostLikeResponse> likePost(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
