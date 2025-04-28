@@ -1,5 +1,5 @@
 // config/SecurityConfig.java
-
+/*
 package com.khu.cloud.diary.config;
 
 import org.springframework.context.annotation.Bean;
@@ -61,3 +61,4 @@ public class SecurityConfig {
         return source;
     }
 }
+ */

@@ -1,0 +1,39 @@
+package com.khu.cloud.diary.community.service;
+
+import com.khu.cloud.diary.community.dto.DiaryPostFeedResponseDto;
+import com.khu.cloud.diary.community.entity.DiaryPost.DiaryPost;
+import com.khu.cloud.diary.community.repository.DiaryPostRepository;
+import com.khu.cloud.diary.community.type.FeedSortType;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RequiredArgsConstructor
+@Service
+public class CommunityService {
+
+    private final DiaryPostRepository diaryPostRepository;
+
+    public List<DiaryPostFeedResponseDto> getFeed(FeedSortType sort, String emotion) {
+        List<DiaryPost> posts;
+
+        boolean isLikeSort = FeedSortType.LIKE.equals(sort);
+        boolean hasEmotion = (emotion != null && !emotion.isBlank());
+
+        if (isLikeSort) {
+            posts = hasEmotion
+                    ? diaryPostRepository.findTop10ByIsSharedTrueAndEmotionTagOrderByLikeCountDescCreatedAtDesc(emotion)
+                    : diaryPostRepository.findTop10ByIsSharedTrueOrderByLikeCountDescCreatedAtDesc();
+        } else { // default: 최신순
+            posts = hasEmotion
+                    ? diaryPostRepository.findTop10ByIsSharedTrueAndEmotionTagOrderByCreatedAtDesc(emotion)
+                    : diaryPostRepository.findTop10ByIsSharedTrueOrderByCreatedAtDesc();
+        }
+
+        return posts.stream()
+                .map(DiaryPostFeedResponseDto::new)
+                .collect(Collectors.toList());
+    }
+}
