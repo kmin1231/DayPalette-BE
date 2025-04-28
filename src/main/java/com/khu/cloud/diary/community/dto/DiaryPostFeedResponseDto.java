@@ -1,6 +1,6 @@
 package com.khu.cloud.diary.community.dto;
 
-import com.khu.cloud.diary.community.entity.DiaryPost.DiaryPost;
+import com.khu.cloud.diary.posts.entity.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,12 +17,12 @@ public class DiaryPostFeedResponseDto {
     private int sympathyCount;
     private LocalDateTime createdAt;
 
-    public DiaryPostFeedResponseDto(DiaryPost post) {
-        this.postId = post.getId();
+    public DiaryPostFeedResponseDto(Post post) {
+        this.postId = post.getPostId();
         this.nickname = post.getUser().getNickname();
-        this.title = post.getContent().substring(0, Math.min(30, post.getContent().length())); // 피드에 간략히
+        this.title = post.getDiaryText().substring(0, Math.min(30, post.getDiaryText().length())); // 피드에 간략히
         this.imageUrl = post.getImageUrl();
-        this.emotion = post.getEmotionTag();  // Enum이면 toString()
+        this.emotion = post.getEmoji();  // Enum으로 toString()
         this.sympathyCount = post.getLikeCount();
         this.createdAt = post.getCreatedAt();
     }

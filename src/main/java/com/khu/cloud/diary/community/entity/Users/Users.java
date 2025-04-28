@@ -1,3 +1,4 @@
+/*
 package com.khu.cloud.diary.community.entity.Users;
 
 import com.khu.cloud.diary.community.entity.BaseTimeEntity;
@@ -30,3 +31,4 @@ public class Users extends BaseTimeEntity {
         this.nickname = nickname;
     }
 }
+*/

@@ -1,7 +1,7 @@
 package com.khu.cloud.diary.community.service;
 
 import com.khu.cloud.diary.community.dto.DiaryPostFeedResponseDto;
-import com.khu.cloud.diary.community.entity.DiaryPost.DiaryPost;
+import com.khu.cloud.diary.posts.entity.Post;
 import com.khu.cloud.diary.community.repository.DiaryPostRepository;
 import com.khu.cloud.diary.community.type.FeedSortType;
 import lombok.RequiredArgsConstructor;
@@ -17,18 +17,18 @@ public class CommunityService {
     private final DiaryPostRepository diaryPostRepository;
 
     public List<DiaryPostFeedResponseDto> getFeed(FeedSortType sort, String emotion) {
-        List<DiaryPost> posts;
+        List<Post> posts;
 
         boolean isLikeSort = FeedSortType.LIKE.equals(sort);
         boolean hasEmotion = (emotion != null && !emotion.isBlank());
 
         if (isLikeSort) {
             posts = hasEmotion
-                    ? diaryPostRepository.findTop10ByIsSharedTrueAndEmotionTagOrderByLikeCountDescCreatedAtDesc(emotion)
+                    ? diaryPostRepository.findTop10ByIsSharedTrueAndEmojiOrderByLikeCountDescCreatedAtDesc(emotion)
                     : diaryPostRepository.findTop10ByIsSharedTrueOrderByLikeCountDescCreatedAtDesc();
         } else { // default: 최신순
             posts = hasEmotion
-                    ? diaryPostRepository.findTop10ByIsSharedTrueAndEmotionTagOrderByCreatedAtDesc(emotion)
+                    ? diaryPostRepository.findTop10ByIsSharedTrueAndEmojiOrderByCreatedAtDesc(emotion)
                     : diaryPostRepository.findTop10ByIsSharedTrueOrderByCreatedAtDesc();
         }
 

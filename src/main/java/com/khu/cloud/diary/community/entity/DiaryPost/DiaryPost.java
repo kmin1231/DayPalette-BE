@@ -1,3 +1,4 @@
+/*
 package com.khu.cloud.diary.community.entity.DiaryPost;
 
 import com.khu.cloud.diary.community.entity.BaseTimeEntity;
@@ -19,10 +20,10 @@ public class DiaryPost extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private Users user;
 
-    /*
-    @Column(length = 50, nullable = false)
-    private String title;
-    */
+
+    // @Column(length = 50, nullable = false)
+    // private String title;
+
 
     @Column(length = 500, nullable = false)
     private String content;
@@ -42,7 +43,7 @@ public class DiaryPost extends BaseTimeEntity {
 
 
     @Builder
-    public DiaryPost(Users user, String content, /*String title,*/
+    public DiaryPost(Users user, String content, //String title
                      String emotionTag, boolean isShared) {
         this.user = user;
         // this.title = title;
@@ -52,3 +53,4 @@ public class DiaryPost extends BaseTimeEntity {
         this.likeCount = 0;
     }
 }
+*/

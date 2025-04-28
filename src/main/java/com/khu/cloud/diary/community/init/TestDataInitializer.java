@@ -1,3 +1,4 @@
+/*
 package com.khu.cloud.diary.community.init;
 
 import com.khu.cloud.diary.community.entity.DiaryPost.DiaryPost;
@@ -37,3 +38,4 @@ public class TestDataInitializer {
         );
     }
 }
+ */
