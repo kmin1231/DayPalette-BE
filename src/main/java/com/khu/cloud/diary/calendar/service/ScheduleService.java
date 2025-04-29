@@ -3,6 +3,10 @@ package com.khu.cloud.diary.calendar.service;
 import com.khu.cloud.diary.calendar.dto.ScheduleRequest;
 import com.khu.cloud.diary.calendar.entity.Schedule;
 import com.khu.cloud.diary.calendar.repository.ScheduleRepository;
+import com.khu.cloud.diary.member.repository.MemberRepository;
+import com.khu.cloud.diary.member.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,15 +15,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
-
-    @Autowired
-    public ScheduleService(ScheduleRepository scheduleRepository){
-        this.scheduleRepository = scheduleRepository;
-    }
+    private final MemberRepository memberRepository;
+    private final JwtUtil jwtUtil;
+    private final HttpServletRequest request;
 
     public Schedule saveSchedule(ScheduleRequest scheduleRequest){
+        //String token = resolveTokenFromRequest(request);
         Schedule newSchedule = new Schedule();
 
         newSchedule.setContent(scheduleRequest.getContent());
