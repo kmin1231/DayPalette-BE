@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class PostMineResponse {
     private Long postId;
     private String diaryText;
-    private String emoji;
+    // private String emoji;
     private String imageUrl;
     private LocalDateTime createdAt;
     private boolean isShared;

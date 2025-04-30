@@ -45,7 +45,7 @@ public class PostMineService {
                 .map(post -> PostMineResponse.builder()
                         .postId(post.getPostId())
                         .diaryText(post.getDiaryText())
-                        .emoji(post.getEmoji())
+                        // .emoji(post.getEmoji())
                         .imageUrl(post.getImageUrl())
                         .createdAt(post.getCreatedAt())
                         .isShared(post.isShared())
