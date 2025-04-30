@@ -44,7 +44,7 @@ public class PostUpdateService {
         }
 
         post.setDiaryText(request.getDiaryText());
-        post.setEmoji(request.getEmoji());
+        // post.setEmoji(request.getEmoji());
         post.setShared(request.isShared());
 
         postRepository.save(post);

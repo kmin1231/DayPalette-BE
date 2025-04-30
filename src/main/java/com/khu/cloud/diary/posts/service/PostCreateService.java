@@ -39,7 +39,8 @@ public class PostCreateService {
         String email = extractEmailFromJwt();
 
         // FastAPI 서버에 이미지 생성 요청
-        GenerateImageResponse imageResponse = generateImageFromAI(requestDto.getDiaryText(), requestDto.getEmoji());
+        // GenerateImageResponse imageResponse = generateImageFromAI(requestDto.getDiaryText(), requestDto.getEmoji());
+        GenerateImageResponse imageResponse = generateImageFromAI(requestDto.getDiaryText());
 
         // S3에 이미지 업로드 -> URL return
         String fileName = FileNameGenerator.generateFileName(email);
@@ -48,7 +49,7 @@ public class PostCreateService {
         // post 저장
         Post post = Post.builder()
                 .diaryText(requestDto.getDiaryText())
-                .emoji(requestDto.getEmoji())
+                // .emoji(requestDto.getEmoji())
                 .imageUrl(imageUrl)
                 .build();
 
@@ -58,17 +59,19 @@ public class PostCreateService {
         return new PostCreateResponse(
                 savedPost.getPostId(),
                 savedPost.getDiaryText(),
-                savedPost.getEmoji(),
+                // savedPost.getEmoji(),
                 savedPost.getImageUrl(),
                 savedPost.getCreatedAt()
         );
     }
 
     // FastAPI 서버에 이미지 생성 요청
-    private GenerateImageResponse generateImageFromAI(String diaryText, String emoji) {
+    // private GenerateImageResponse generateImageFromAI(String diaryText, String emoji) {
+    private GenerateImageResponse generateImageFromAI(String diaryText) {
         return webClient.post()
                 .uri("/generate-image")
-                .bodyValue(new PostCreateRequest(diaryText, emoji))
+                // .bodyValue(new PostCreateRequest(diaryText, emoji))
+                .bodyValue(new PostCreateRequest(diaryText))
                 .retrieve()
                 .bodyToMono(GenerateImageResponse.class)
                 .block();
