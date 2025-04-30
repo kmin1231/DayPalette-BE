@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 @RequiredArgsConstructor
@@ -65,11 +66,14 @@ public class PostCreateService {
         );
     }
 
+    @Value("${ai.server.url}")
+    private String aiServerUrl;
+
     // FastAPI 서버에 이미지 생성 요청
     // private GenerateImageResponse generateImageFromAI(String diaryText, String emoji) {
     private GenerateImageResponse generateImageFromAI(String diaryText) {
         return webClient.post()
-                .uri("/generate-image")
+                .uri(aiServerUrl + "/generate-image")
                 // .bodyValue(new PostCreateRequest(diaryText, emoji))
                 .bodyValue(new PostCreateRequest(diaryText))
                 .retrieve()
