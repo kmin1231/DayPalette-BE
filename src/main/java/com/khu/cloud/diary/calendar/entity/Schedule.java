@@ -1,17 +1,19 @@
 package com.khu.cloud.diary.calendar.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
+@Table(name = "schedules")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Schedule {
 
     @Id
@@ -29,6 +31,10 @@ public class Schedule {
 
     @Column(nullable = true)
     private String emotion_icon;
+
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     public Schedule(Long userId, Date date, String content, String emotion_icon){
         this.userId = userId;
