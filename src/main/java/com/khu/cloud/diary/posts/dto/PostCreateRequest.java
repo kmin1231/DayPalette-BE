@@ -13,5 +13,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PostCreateRequest {
     private String diaryText;
-    private String emoji;
+    // private String emoji;
 }

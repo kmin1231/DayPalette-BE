@@ -1,0 +1,43 @@
+name: 🐳 Build & Push Docker Image
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🐳 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🐳 Copy env file
+        run: |
+          echo "$ENV" > .env
+
+        env:
+          ENV: ${{ secrets.ENV }}
+
+      - name: 🐳 Log in to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: 🐳 Set up commit SHA
+        id: vars
+        run: echo "GIT_COMMIT=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+
+      - name: 🐳 Build Docker image
+        run: |
+          docker build -t edenminkim/daypalette-spring:${{ env.GIT_COMMIT }} .
+          docker tag edenminkim/daypalette-spring:${{ env.GIT_COMMIT }} edenminkim/daypalette-spring:latest
+
+      - name: 🐳 Push Docker image
+        run: |
+          docker push edenminkim/daypalette-spring:${{ env.GIT_COMMIT }}
+          docker push edenminkim/daypalette-spring:latest

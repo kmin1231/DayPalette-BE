@@ -32,8 +32,8 @@ public class Post {
     @Column(nullable = false)
     private String diaryText;
 
-    @Column(nullable = false)
-    private String emoji;
+    // @Column(nullable = false)
+    // private String emoji;
 
     @Column(nullable = false)
     private String imageUrl;
