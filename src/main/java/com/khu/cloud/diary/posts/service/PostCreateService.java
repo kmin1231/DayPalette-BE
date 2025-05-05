@@ -73,11 +73,12 @@ public class PostCreateService {
     // private GenerateImageResponse generateImageFromAI(String diaryText, String emoji) {
     private GenerateImageResponse generateImageFromAI(String diaryText) {
         return webClient.post()
-                .uri(aiServerUrl + "/generate-image")
+                .uri(aiServerUrl + "/generate")
                 // .bodyValue(new PostCreateRequest(diaryText, emoji))
                 .bodyValue(new PostCreateRequest(diaryText))
                 .retrieve()
-                .bodyToMono(GenerateImageResponse.class)
+                .bodyToMono(byte[].class)
+                .map(bytes -> new GenerateImageResponse(bytes))
                 .block();
     }
 

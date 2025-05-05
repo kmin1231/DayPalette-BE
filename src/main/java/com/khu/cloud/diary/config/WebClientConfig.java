@@ -17,6 +17,8 @@ public class WebClientConfig {
     public WebClient webClient() {
         return WebClient.builder()
                 .baseUrl(aiServerBaseUrl)
+                .codecs(configurer ->
+                    configurer.defaultCodecs().maxInMemorySize(10 * 1024 * 1024))
                 .build();
     }
 }
