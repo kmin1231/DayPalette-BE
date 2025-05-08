@@ -27,15 +27,15 @@ public class ScheduleService {
     private final HttpServletRequest request;
 
     public Schedule saveSchedule(ScheduleRequest scheduleRequest){
-        //String email = extractEmailFromJwt();
+        String email = extractEmailFromJwt();
 
-        //Member member = memberRepository.findByEmail(email).orElseThrow(
-        //        () -> new CoreException(ExceptionType.USER_NOT_FOUND) );
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+                () -> new CoreException(ExceptionType.USER_NOT_FOUND) );
 
 
         Schedule newSchedule = Schedule.builder().
                 content(scheduleRequest.getContent()).
-                userId(0L /*member.getUserId()*/).
+                userId(member.getUserId()).
                 date(scheduleRequest.getDate()).
                 emotion_icon(scheduleRequest.getEmotionIcon()).build();
 
