@@ -9,10 +9,10 @@
 
 <h3>⭐ Key Features</h3>
 <div align="center">
-  <img src="https://drive.google.com/uc?id=1fwTiqPK9BFMxaMqKcS_s6t_4ghlBnmfT" width=80%>
+  <img src="https://drive.google.com/uc?id=1fwTiqPK9BFMxaMqKcS_s6t_4ghlBnmfT" width=90%>
 </div>
 
 <h3>⚙️ Tech Stacks</h3>
 <div align="center">
-  <img src="https://drive.google.com/uc?id=1PsBy3JtDWcQia2fwjlHQVTIMHibFDmPk" width=60%>
+  <img src="https://drive.google.com/uc?id=1PsBy3JtDWcQia2fwjlHQVTIMHibFDmPk" width=70%>
 </div>
