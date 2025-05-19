@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -74,7 +73,13 @@ public class ScheduleService {
     }
 
     public List<Schedule> getScheduleByDate(Date date){
-        return scheduleRepository.findByDate(date);
+        String token = resolveTokenFromRequest(request);
+        String email = jwtUtil.extractEmail(token);
+
+        Member member = memberRepository.findByEmail(email)
+            .orElseThrow(() -> new CoreException(ExceptionType.USER_NOT_FOUND));
+
+        return scheduleRepository.findByUserIdAndDate(member.getUserId(), date);
     }
 
     public Schedule editSchedule(Long scheduleId, ScheduleRequest scheduleRequest){
