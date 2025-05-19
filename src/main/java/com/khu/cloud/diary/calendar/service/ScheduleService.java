@@ -12,9 +12,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.ZoneId;
 
 import static com.khu.cloud.diary.posts.util.AuthUtil.resolveTokenFromRequest;
 
@@ -31,13 +36,25 @@ public class ScheduleService {
 
         Member member = memberRepository.findByEmail(email).orElseThrow(
                 () -> new CoreException(ExceptionType.USER_NOT_FOUND) );
+        
+
+        LocalDateTime dateTime;
+        try {
+            String dateTimeStr = scheduleRequest.getDate() + "T" + scheduleRequest.getTime().replace("-", ":") + ":00";
+            dateTime = LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        } catch (DateTimeParseException e) {
+            throw new CoreException(ExceptionType.INVALID_DATE_FORMAT);
+        }
+
+        Date date = Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
 
 
         Schedule newSchedule = Schedule.builder().
                 content(scheduleRequest.getContent()).
                 userId(member.getUserId()).
-                date(scheduleRequest.getDate()).
-                emotion_icon(scheduleRequest.getEmotionIcon()).build();
+                date(date).
+                // emotion_icon(scheduleRequest.getEmotionIcon())
+                build();
 
         return scheduleRepository.save(newSchedule);
     }
@@ -65,8 +82,21 @@ public class ScheduleService {
         schedule = scheduleRepository.findByScheduleId(scheduleId)
                 .orElseThrow( () -> new CoreException(ExceptionType.SCHEDULE_NOT_FOUND));
 
-        schedule.updateSchedule(scheduleRequest.getDate(), scheduleRequest.getContent(),
-                                scheduleRequest.getEmotionIcon());
+
+        LocalDateTime dateTime;
+        try {
+            String dateTimeStr = scheduleRequest.getDate() + "T" + scheduleRequest.getTime().replace("-", ":") + ":00";
+            dateTime = LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        } catch (DateTimeParseException e) {
+            throw new CoreException(ExceptionType.INVALID_DATE_FORMAT);
+        }
+
+        Date date = Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+
+        // schedule.updateSchedule(scheduleRequest.getDate(), scheduleRequest.getContent(), scheduleRequest.getEmotionIcon());
+        schedule.updateSchedule(date, scheduleRequest.getContent(), null);
+
         return scheduleRepository.save(schedule);
     }
 
