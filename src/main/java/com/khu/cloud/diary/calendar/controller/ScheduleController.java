@@ -39,8 +39,10 @@ public class ScheduleController {
     public ResponseEntity<ScheduleResponse> addSchedule(@RequestBody ScheduleRequest scheduleRequest){
         Schedule newSchedule = scheduleService.saveSchedule(scheduleRequest);
         ScheduleResponse response = new ScheduleResponse(
-                newSchedule.getScheduleId(), newSchedule.getContent(),
-                newSchedule.getDate(),       newSchedule.getEmotion_icon(),
+                newSchedule.getScheduleId(),
+                newSchedule.getContent(),
+                newSchedule.getDate(),
+                // newSchedule.getEmotion_icon(),
                 newSchedule.getCreatedAt() );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -58,8 +60,11 @@ public class ScheduleController {
                                                          HttpServletRequest request){
         Schedule schedule = scheduleService.editSchedule(scheduleId, scheduleRequest);
         ScheduleResponse response = new ScheduleResponse(
-                schedule.getScheduleId(), schedule.getContent(),
-                schedule.getDate(),       schedule.getEmotion_icon(), schedule.getCreatedAt());
+                schedule.getScheduleId(),
+                schedule.getContent(),
+                schedule.getDate(),
+                // schedule.getEmotion_icon(),
+                schedule.getCreatedAt());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
