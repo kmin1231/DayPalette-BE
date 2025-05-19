@@ -1,9 +1,9 @@
 package com.khu.cloud.diary.community.service;
 
-import com.khu.cloud.diary.community.dto.DiaryPostFeedResponseDto;
+import com.khu.cloud.diary.community.dto.FeedResponseDto;
 import com.khu.cloud.diary.posts.entity.Post;
-import com.khu.cloud.diary.community.repository.DiaryPostRepository;
 import com.khu.cloud.diary.community.type.FeedSortType;
+import com.khu.cloud.diary.posts.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 @Service
 public class CommunityService {
 
-    private final DiaryPostRepository diaryPostRepository;
-
-    public List<DiaryPostFeedResponseDto> getFeed(FeedSortType sort, String emotion) {
+    private final PostRepository postRepo;
+/*
+    public List<FeedResponseDto> getFeed(FeedSortType sort, String emotion) {
         List<Post> posts;
 
         boolean isLikeSort = FeedSortType.LIKE.equals(sort);
@@ -24,16 +24,28 @@ public class CommunityService {
 
         if (isLikeSort) {
             posts = hasEmotion
-                    ? diaryPostRepository.findTop10ByIsSharedTrueAndEmojiOrderByLikeCountDescCreatedAtDesc(emotion)
-                    : diaryPostRepository.findTop10ByIsSharedTrueOrderByLikeCountDescCreatedAtDesc();
+                    ? postRepo.findTop10ByIsSharedTrueAndEmojiOrderByLikeCountDescCreatedAtDesc(emotion)
+                    : postRepo.findTop10ByIsSharedTrueOrderByLikeCountDescCreatedAtDesc();
         } else { // default: 최신순
             posts = hasEmotion
-                    ? diaryPostRepository.findTop10ByIsSharedTrueAndEmojiOrderByCreatedAtDesc(emotion)
-                    : diaryPostRepository.findTop10ByIsSharedTrueOrderByCreatedAtDesc();
+                    ? postRepo.findTop10ByIsSharedTrueAndEmojiOrderByCreatedAtDesc(emotion)
+                    : postRepo.findTop10ByIsSharedTrueOrderByCreatedAtDesc();
         }
 
         return posts.stream()
-                .map(DiaryPostFeedResponseDto::new)
+                .map(FeedResponseDto::new)
                 .collect(Collectors.toList());
     }
+ */
+        public List<FeedResponseDto> getFeed(FeedSortType sort) {
+
+            List<Post> posts = (sort == FeedSortType.LIKE)
+                    ? postRepo.findTop10ByIsSharedTrueOrderByLikeCountDescCreatedAtDesc()
+                    : postRepo.findTop10ByIsSharedTrueOrderByCreatedAtDesc();
+
+            return posts.stream()
+                    .map(FeedResponseDto::new)
+                    .collect(Collectors.toList());
+        }
+
 }
