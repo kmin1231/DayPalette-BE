@@ -5,6 +5,8 @@ import com.khu.cloud.diary.calendar.dto.ScheduleRequest;
 import com.khu.cloud.diary.calendar.dto.ScheduleResponse;
 import com.khu.cloud.diary.calendar.entity.Schedule;
 import com.khu.cloud.diary.calendar.service.ScheduleService;
+import com.khu.cloud.diary.core.exception.CoreException;
+import com.khu.cloud.diary.core.exception.ExceptionType;
 import com.khu.cloud.diary.posts.dto.PostMineResponse;
 import com.khu.cloud.diary.posts.service.PostMineService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,9 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/api/calendar")
@@ -25,8 +29,16 @@ public class ScheduleController {
     private final PostMineService postService;
 
     @GetMapping("/{date}")
-    public ResponseEntity<PostAndScheduleResponse> getScheduleAndPost(@PathVariable("date") Instant date, HttpServletRequest request){
-        Date convertedDate = Date.from(date);
+    public ResponseEntity<PostAndScheduleResponse> getScheduleAndPost(@PathVariable String date) {
+        LocalDate localDate;
+        try {
+            localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+        } catch (DateTimeParseException e) {
+            throw new CoreException(ExceptionType.INVALID_DATE_FORMAT);
+        }
+
+        Date convertedDate = java.sql.Date.valueOf(localDate);
+
         List<Schedule> schedules = scheduleService.getScheduleByDate(convertedDate);
         List<PostMineResponse> posts = postService.getMyPosts().data();
 
