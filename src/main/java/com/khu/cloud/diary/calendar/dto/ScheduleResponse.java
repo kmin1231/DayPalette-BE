@@ -10,15 +10,17 @@ import java.util.Date;
 @Setter
 public class ScheduleResponse {
     private Long scheduleId;
-    private Date date;
+    private String date;
+    private String time;
     private String content;
     // private String emotionIcon;
     private LocalDateTime createdAt;
 
-    public ScheduleResponse(Long scheduleId, String content, Date date, LocalDateTime createdAt){
+    public ScheduleResponse(Long scheduleId, String content, String date, String time, LocalDateTime createdAt){
         this.scheduleId = scheduleId;
         this.content = content;
         this.date = date;
+        this.time = time;
         // this.emotionIcon = emotionIcon;
         this.createdAt = createdAt;
     }

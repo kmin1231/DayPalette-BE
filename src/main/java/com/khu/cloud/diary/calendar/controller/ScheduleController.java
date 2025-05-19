@@ -30,6 +30,7 @@ public class ScheduleController {
 
     @GetMapping("/{date}")
     public ResponseEntity<PostAndScheduleResponse> getScheduleAndPost(@PathVariable String date) {
+        /*
         LocalDate localDate;
         try {
             localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
@@ -38,8 +39,8 @@ public class ScheduleController {
         }
 
         Date convertedDate = java.sql.Date.valueOf(localDate);
-
-        List<Schedule> schedules = scheduleService.getScheduleByDate(convertedDate);
+         */
+        List<Schedule> schedules = scheduleService.getScheduleByDate(date);
         List<PostMineResponse> posts = postService.getMyPosts().data();
 
         PostAndScheduleResponse response = new PostAndScheduleResponse(schedules, posts);
@@ -54,6 +55,7 @@ public class ScheduleController {
                 newSchedule.getScheduleId(),
                 newSchedule.getContent(),
                 newSchedule.getDate(),
+                newSchedule.getTime(),
                 // newSchedule.getEmotion_icon(),
                 newSchedule.getCreatedAt() );
 
@@ -75,6 +77,7 @@ public class ScheduleController {
                 schedule.getScheduleId(),
                 schedule.getContent(),
                 schedule.getDate(),
+                schedule.getTime(),
                 // schedule.getEmotion_icon(),
                 schedule.getCreatedAt());
 

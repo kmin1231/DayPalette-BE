@@ -35,8 +35,8 @@ public class ScheduleService {
 
         Member member = memberRepository.findByEmail(email).orElseThrow(
                 () -> new CoreException(ExceptionType.USER_NOT_FOUND) );
-        
 
+        /*
         LocalDateTime dateTime;
         try {
             String dateTimeStr = scheduleRequest.getDate() + "T" + scheduleRequest.getTime().replace("-", ":") + ":00";
@@ -46,12 +46,17 @@ public class ScheduleService {
         }
 
         Date date = Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+         */
+
+        String date = scheduleRequest.getDate();
+        String time = scheduleRequest.getTime();
 
 
         Schedule newSchedule = Schedule.builder().
                 content(scheduleRequest.getContent()).
                 userId(member.getUserId()).
                 date(date).
+                time(time).
                 // emotion_icon(scheduleRequest.getEmotionIcon())
                 build();
 
@@ -72,7 +77,7 @@ public class ScheduleService {
                 .orElseThrow(() -> new CoreException(ExceptionType.SCHEDULE_NOT_FOUND)));
     }
 
-    public List<Schedule> getScheduleByDate(Date date){
+    public List<Schedule> getScheduleByDate(String date){
         String token = resolveTokenFromRequest(request);
         String email = jwtUtil.extractEmail(token);
 
@@ -87,7 +92,7 @@ public class ScheduleService {
         schedule = scheduleRepository.findByScheduleId(scheduleId)
                 .orElseThrow( () -> new CoreException(ExceptionType.SCHEDULE_NOT_FOUND));
 
-
+        /*
         LocalDateTime dateTime;
         try {
             String dateTimeStr = scheduleRequest.getDate() + "T" + scheduleRequest.getTime().replace("-", ":") + ":00";
@@ -97,10 +102,13 @@ public class ScheduleService {
         }
 
         Date date = Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+         */
+        String date = scheduleRequest.getDate();
+        String time = scheduleRequest.getTime();
 
 
         // schedule.updateSchedule(scheduleRequest.getDate(), scheduleRequest.getContent(), scheduleRequest.getEmotionIcon());
-        schedule.updateSchedule(date, scheduleRequest.getContent());
+        schedule.updateSchedule(date, time, scheduleRequest.getContent());
 
         return scheduleRepository.save(schedule);
     }
