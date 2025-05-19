@@ -18,12 +18,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
 
+    private final PostCreateService postCreateService;
     private final PostMineService postmMineService;
     private final PostDetailService postDetailService;
     private final PostUpdateService postUpdateService;
     private final PostShareUpdateService postShareUpdateService;
     private final PostDeleteService postDeleteService;
     private final PostLikeService postLikeService;
+
+    // FastAPI 서버에 이미지 생성 요청
+    @PostMapping("/create")
+    public ResponseEntity<PostCreateResponse> createPost(@RequestBody PostCreateRequest postCreateRequest) {
+        PostCreateResponse postCreateResponse = postCreateService.createPost(postCreateRequest);
+        return ResponseEntity.ok(postCreateResponse);
+    }
 
     // 사용자의 post 조회
     @GetMapping("/mine")
