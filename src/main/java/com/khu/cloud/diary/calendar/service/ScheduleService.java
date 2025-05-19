@@ -100,7 +100,7 @@ public class ScheduleService {
 
 
         // schedule.updateSchedule(scheduleRequest.getDate(), scheduleRequest.getContent(), scheduleRequest.getEmotionIcon());
-        schedule.updateSchedule(date, scheduleRequest.getContent(), null);
+        schedule.updateSchedule(date, scheduleRequest.getContent());
 
         return scheduleRepository.save(schedule);
     }

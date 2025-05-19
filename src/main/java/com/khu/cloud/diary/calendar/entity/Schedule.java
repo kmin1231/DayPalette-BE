@@ -29,24 +29,24 @@ public class Schedule {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = true)
-    private String emotion_icon;
+    // @Column(nullable = true)
+    // private String emotion_icon;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Schedule(Long userId, Date date, String content, String emotion_icon){
+    public Schedule(Long userId, Date date, String content){
         this.userId = userId;
         this.date = date;
         this.content = content;
-        this.emotion_icon = emotion_icon;
+        // this.emotion_icon = emotion_icon;
     }
 
-    public void updateSchedule(Date date, String content, String emotion_icon){
+    public void updateSchedule(Date date, String content){
         this.date = date;
         this.content = content;
-        this.emotion_icon = emotion_icon;
+        // this.emotion_icon = emotion_icon;
     }
     
 }
