@@ -30,6 +30,9 @@ public class Post {
     private Member user;
 
     @Column(nullable = false)
+    private String date;
+
+    @Column(nullable = false)
     private String diaryText;
 
     // @Column(nullable = false)

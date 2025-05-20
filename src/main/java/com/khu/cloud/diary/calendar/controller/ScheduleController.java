@@ -8,6 +8,7 @@ import com.khu.cloud.diary.calendar.service.ScheduleService;
 import com.khu.cloud.diary.core.exception.CoreException;
 import com.khu.cloud.diary.core.exception.ExceptionType;
 import com.khu.cloud.diary.posts.dto.PostMineResponse;
+import com.khu.cloud.diary.posts.entity.Post;
 import com.khu.cloud.diary.posts.service.PostMineService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class ScheduleController {
         Date convertedDate = java.sql.Date.valueOf(localDate);
          */
         List<Schedule> schedules = scheduleService.getScheduleByDate(date);
-        List<PostMineResponse> posts = postService.getMyPosts().data();
+        List<Post> posts = postService.getMyPostsByDate(date);
 
         PostAndScheduleResponse response = new PostAndScheduleResponse(schedules, posts);
 
