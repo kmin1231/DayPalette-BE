@@ -30,7 +30,6 @@ public class MemberService {
                 .email("daypalette@cloud.com")    // email
                 .password(encodedPassword)              // password
                 .nickname("daypalette")        // nickname
-                .createdAt(LocalDateTime.now())
                 .build();
 
             memberRepository.save(temporaryUser);
