@@ -2,9 +2,11 @@
 
 package com.khu.cloud.diary.member.entity;
 
+import com.khu.cloud.diary.core.basetime.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -13,11 +15,8 @@ import com.khu.cloud.diary.posts.entity.Post;
 @Entity
 @Table(name = "users")
 @Getter
-@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,17 +28,20 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private String nickname;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+    // 필요하면 modifiedAt은 BaseTimeEntity쪽에 이미 있음
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Post> posts;
+    // private List<Post> posts = new ArrayList<>();   // NPE 방지용 초기화
 
-    public Long getUserId() {
-        return userId;
+    @Builder
+    public Member(String email, String password, String nickname) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
     }
 }

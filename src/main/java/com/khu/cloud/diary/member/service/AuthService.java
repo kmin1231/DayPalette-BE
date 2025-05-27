@@ -39,11 +39,11 @@ public class AuthService {
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
 
         // 새로운 사용자 계정 생성
-        Member newMember = new Member();
-        newMember.setEmail(signupRequest.getEmail());
-        newMember.setPassword(encodedPassword);
-        newMember.setNickname(signupRequest.getNickname());
-        newMember.setCreatedAt(LocalDateTime.now());
+        Member newMember = Member.builder()
+                .email(signupRequest.getEmail())
+                .password(encodedPassword)
+                .nickname(signupRequest.getNickname())
+                .build();
 
         // 사용자 정보 저장
         Member createdMember = memberRepository.save(newMember);
