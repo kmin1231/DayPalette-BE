@@ -49,6 +49,7 @@ public class PostDetailService {
         // API response object 생성
         PostDetailResponse response = PostDetailResponse.builder()
                 .postId(post.getPostId())
+                .date(post.getDate())
                 .diaryText(post.getDiaryText())
                 // .emoji(post.getEmoji())
                 .imageUrl(post.getImageUrl())

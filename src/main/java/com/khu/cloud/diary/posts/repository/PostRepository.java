@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByUser(Member user);
+    List<Post> findByUserAndDate(Member user, String date);
 }

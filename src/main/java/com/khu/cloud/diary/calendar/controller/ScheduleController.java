@@ -8,6 +8,7 @@ import com.khu.cloud.diary.calendar.service.ScheduleService;
 import com.khu.cloud.diary.core.exception.CoreException;
 import com.khu.cloud.diary.core.exception.ExceptionType;
 import com.khu.cloud.diary.posts.dto.PostMineResponse;
+import com.khu.cloud.diary.posts.entity.Post;
 import com.khu.cloud.diary.posts.service.PostMineService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class ScheduleController {
 
     @GetMapping("/{date}")
     public ResponseEntity<PostAndScheduleResponse> getScheduleAndPost(@PathVariable String date) {
+        /*
         LocalDate localDate;
         try {
             localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
@@ -38,9 +40,9 @@ public class ScheduleController {
         }
 
         Date convertedDate = java.sql.Date.valueOf(localDate);
-
-        List<Schedule> schedules = scheduleService.getScheduleByDate(convertedDate);
-        List<PostMineResponse> posts = postService.getMyPosts().data();
+         */
+        List<Schedule> schedules = scheduleService.getScheduleByDate(date);
+        List<Post> posts = postService.getMyPostsByDate(date);
 
         PostAndScheduleResponse response = new PostAndScheduleResponse(schedules, posts);
 
@@ -54,6 +56,7 @@ public class ScheduleController {
                 newSchedule.getScheduleId(),
                 newSchedule.getContent(),
                 newSchedule.getDate(),
+                newSchedule.getTime(),
                 // newSchedule.getEmotion_icon(),
                 newSchedule.getCreatedAt() );
 
@@ -75,6 +78,7 @@ public class ScheduleController {
                 schedule.getScheduleId(),
                 schedule.getContent(),
                 schedule.getDate(),
+                schedule.getTime(),
                 // schedule.getEmotion_icon(),
                 schedule.getCreatedAt());
 

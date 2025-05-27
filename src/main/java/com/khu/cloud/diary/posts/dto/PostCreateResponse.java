@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PostCreateResponse {
     private Long postId;
+    private String date;
     private String diaryText;
     // private String emoji;
     private String imageUrl;

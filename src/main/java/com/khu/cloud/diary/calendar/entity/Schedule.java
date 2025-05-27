@@ -23,8 +23,13 @@ public class Schedule {
     @Column(nullable = false)
     private Long userId;
 
+    // "yyyy-mm-dd"
     @Column(nullable = false)
-    private Date date;
+    private String date;
+
+    // "hh-mm"
+    @Column(nullable = false)
+    private String time;
 
     @Column(nullable = false)
     private String content;
@@ -36,15 +41,17 @@ public class Schedule {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Schedule(Long userId, Date date, String content){
+    public Schedule(Long userId, String date, String time, String content){
         this.userId = userId;
         this.date = date;
+        this.time = time;
         this.content = content;
         // this.emotion_icon = emotion_icon;
     }
 
-    public void updateSchedule(Date date, String content){
+    public void updateSchedule(String date, String time, String content){
         this.date = date;
+        this.time = time;
         this.content = content;
         // this.emotion_icon = emotion_icon;
     }
