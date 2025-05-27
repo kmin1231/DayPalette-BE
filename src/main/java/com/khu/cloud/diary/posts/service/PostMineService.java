@@ -44,6 +44,7 @@ public class PostMineService {
         List<PostMineResponse> postResponses = posts.stream()
                 .map(post -> PostMineResponse.builder()
                         .postId(post.getPostId())
+                        .date(post.getDate())
                         .diaryText(post.getDiaryText())
                         // .emoji(post.getEmoji())
                         .imageUrl(post.getImageUrl())
@@ -54,5 +55,16 @@ public class PostMineService {
                 .collect(Collectors.toList());
 
         return ApiResponse.success(postResponses);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Post> getMyPostsByDate(String date){
+        String token = resolveTokenFromRequest(request);
+        String email = jwtUtil.extractEmail(token);
+
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new CoreException(ExceptionType.USER_NOT_FOUND));
+
+        return postRepository.findByUserAndDate(member, date);
     }
 }

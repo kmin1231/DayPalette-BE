@@ -8,6 +8,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.khu.cloud.diary.posts.entity.Post;
 
@@ -33,7 +34,9 @@ public class Member extends BaseTimeEntity {
     // 필요하면 modifiedAt은 BaseTimeEntity쪽에 이미 있음
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> posts = new ArrayList<>();   // NPE 방지용 초기화
+    @JsonIgnore
+    private List<Post> posts;
+    // private List<Post> posts = new ArrayList<>();   // NPE 방지용 초기화
 
     @Builder
     public Member(String email, String password, String nickname) {

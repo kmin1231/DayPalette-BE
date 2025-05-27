@@ -8,7 +8,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.khu.cloud.diary.member.entity.Member;
@@ -28,7 +28,11 @@ public class Post extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private Member user;
+
+    @Column(nullable = false)
+    private String date;
 
     @Column(nullable = false)
     private String diaryText;

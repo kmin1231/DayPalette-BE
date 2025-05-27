@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class PostMineResponse {
     private Long postId;
+    private String date;
     private String diaryText;
     // private String emoji;
     private String imageUrl;
