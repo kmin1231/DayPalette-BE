@@ -2,15 +2,10 @@
 
 package com.khu.cloud.diary.posts.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class GenerateImageResponse {
-    private byte[] diaryImage;
+    private String imageUrl;
 }
