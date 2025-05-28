@@ -36,7 +36,11 @@ public enum ExceptionType {
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
 
     INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "날짜 형식이 올바르지 않습니다."),
-    SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "일정을 찾을 수 없습니다.");
+    SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "일정을 찾을 수 없습니다."),
+
+    // Gemini image generation errors
+    GEMINI_API_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Gemini 이미지 생성에 실패했습니다."),
+    GEMINI_INVALID_RESPONSE(HttpStatus.BAD_GATEWAY, "Gemini 서버로부터 유효하지 않은 응답을 받았습니다.");
 
     
     private final HttpStatus status;

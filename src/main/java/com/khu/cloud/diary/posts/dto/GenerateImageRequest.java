@@ -1,4 +1,4 @@
-// posts/dto/PostCreateRequest.java
+// posts/dto/GenerateImageRequest.java
 
 package com.khu.cloud.diary.posts.dto;
 
@@ -7,8 +7,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PostCreateRequest {
+public class GenerateImageRequest {
     private String diaryText;
-    private String date;
-    private String imageUrl;
 }

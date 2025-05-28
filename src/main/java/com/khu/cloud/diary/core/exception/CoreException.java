@@ -12,6 +12,11 @@ public class CoreException extends RuntimeException {
         this.exceptionType = exceptionType;
     }
 
+    public CoreException(ExceptionType exceptionType, String detailMessage) {
+        super(exceptionType.getMessage() + " - " + detailMessage);
+        this.exceptionType = exceptionType;
+    }
+
     public ExceptionType getExceptionType() {
         return exceptionType;
     }
