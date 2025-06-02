@@ -1,0 +1,48 @@
+- name: Install Prometheus and Grafana
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install Docker Compose
+      get_url:
+        url: https://github.com/docker/compose/releases/latest/download/docker-compose-`uname -s`-`uname -m`
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+
+    - name: Create Prometheus config
+      copy:
+        dest: /home/ec2-user/prometheus.yml
+        content: |
+          global:
+            scrape_interval: 15s
+          scrape_configs:
+            - job_name: 'spring-boot'
+              metrics_path: /actuator/prometheus
+              static_configs:
+                - targets: ['localhost:8090']
+
+    - name: Create Docker Compose file
+      copy:
+        dest: /home/ec2-user/docker-compose.yaml
+        content: |
+          version: '3'
+          services:
+            prometheus:
+              image: prom/prometheus
+              volumes:
+                - /home/ec2-user/prometheus.yml:/etc/prometheus/prometheus.yml
+              ports:
+                - "9090:9090"
+
+            grafana:
+              image: grafana/grafana
+              ports:
+                - "3000:3000"
+              environment:
+                - GF_SECURITY_ADMIN_USER=admin
+                - GF_SECURITY_ADMIN_PASSWORD=admin
+
+    - name: Launch Docker Compose
+      shell: |
+        cd /home/ec2-user
+        docker-compose up -d
