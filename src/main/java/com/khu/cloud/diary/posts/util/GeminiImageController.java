@@ -31,7 +31,7 @@ public class GeminiImageController {
     private final ObjectMapper objectMapper = new ObjectMapper();
     
     private static final String PROMPT_SUFFIX =
-        "Based on the text, please create an emotional and soft diary illustration that reflects the mood, scenary, and feelings of the moment.";
+        "Based on the text, please create a warm, emotional, dreamy and soft diary-style illustration that reflects the mood, scenery, and feelings of the moment. Do not include any text, words, sentences, or letters in the image.";
 
     private final S3UploadService s3UploadService;
     private final JwtUtil jwtUtil;
