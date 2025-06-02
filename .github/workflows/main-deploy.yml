@@ -26,9 +26,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: ⚙️ Install Ansible & boto3
+      - name: ⚙️ Install Python dependencies
         run: |
           pip install -r requirements.txt
+          python -m pip install --upgrade pip
+          pip install ansible==8.4.0 boto3>=1.28.0 botocore>=1.31.0
 
       - name: ⚙️ Copy env file
         run: |
@@ -36,10 +38,6 @@ jobs:
 
         env:
           ENV: ${{ secrets.ENV }}
-       
-      - name: ⚙️ Create .env file (base64 decode)
-        run: |
-          echo "${{ secrets.ENV_BASE64 }}" | base64 -d > .env
 
       - name: ⚙️ Set up commit SHA
         run: |
@@ -105,6 +103,15 @@ jobs:
 
       - name: 🚀 Install amazon.aws collection
         run: ansible-galaxy collection install amazon.aws
+
+      - name: 🚀 Debug Ansible inventory (test)
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          ANSIBLE_CONFIG: ansible/ansible.cfg
+        run: |
+          ansible-inventory -i ansible/inventory_ssm.yml --graph
 
       - name: 🚀 Install Prometheus & Grafana (Ansible via SSM)
         env:
