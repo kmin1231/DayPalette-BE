@@ -14,23 +14,12 @@ env:
   ENV_PATH: /home/ec2-user/.env
 
 jobs:
-  build-and-deploy:
+  deployment-and-monitoring-setup:
     runs-on: ubuntu-latest
 
     steps:
       - name: ⚙️ Checkout repository
         uses: actions/checkout@v3
-        
-      - name: ⚙️ Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-
-      - name: ⚙️ Install Python dependencies
-        run: |
-          pip install -r requirements.txt
-          python -m pip install --upgrade pip
-          pip install ansible>=8.4.0 boto3>=1.28.0 botocore>=1.31.0
 
       - name: ⚙️ Copy env file
         run: |
@@ -92,6 +81,7 @@ jobs:
               'SECRET=$(aws secretsmanager get-secret-value --secret-id daypalette-env --region ap-northeast-2 --query SecretString --output text)',
               'echo \"$SECRET\" > /home/ec2-user/.env',
               'chmod 600 /home/ec2-user/.env',
+              'chown ec2-user:ec2-user /home/ec2-user/.env',
               'aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPO_URI }}',
               'docker stop ${{ env.CONTAINER_NAME }} || true',
               'docker rm ${{ env.CONTAINER_NAME }} || true',
@@ -101,23 +91,43 @@ jobs:
             --region ${{ secrets.AWS_REGION }} \
             --output text
 
-      - name: 🚀 Install amazon.aws collection
-        run: ansible-galaxy collection install amazon.aws
-
-      - name: 🚀 Debug Ansible inventory (test)
-        env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
-          ANSIBLE_CONFIG: ansible/ansible.cfg
+      - name: 🚀 Install Prometheus & Grafana (via SSM)
         run: |
-          ansible-inventory -i ansible/inventory_ssm.yaml --graph
-
-      - name: 🚀 Install Prometheus & Grafana (Ansible via SSM)
-        env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
-          ANSIBLE_CONFIG: ansible/ansible.cfg
-        run: |
-          ansible-playbook -i ansible/inventory_ssm.yaml ansible/setup-monitoring.yml
+          aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --comment "Install Prometheus and Grafana via Docker Compose" \
+            --targets '[{"Key":"tag:Name","Values":["DayPalette_spb"]}]' \
+            |
+            aws ssm send-command \
+              --document-name "AWS-RunShellScript" \
+              --comment "Install Prometheus and Grafana via Docker Compose" \
+              --targets '[{"Key":"tag:Name","Values":["DayPalette_spb"]}]' \
+              --parameters commands="[
+                'curl -L \"https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose',
+                'chmod +x /usr/local/bin/docker-compose',
+                'echo \"global:\" > /home/ec2-user/prometheus.yml',
+                'echo \"  scrape_interval: 15s\" >> /home/ec2-user/prometheus.yml',
+                'echo \"scrape_configs:\" >> /home/ec2-user/prometheus.yml',
+                'echo \"  - job_name: spring-boot\" >> /home/ec2-user/prometheus.yml',
+                'echo \"    metrics_path: /actuator/prometheus\" >> /home/ec2-user/prometheus.yml',
+                'echo \"    static_configs:\" >> /home/ec2-user/prometheus.yml',
+                'echo \"      - targets: [\\\"localhost:8090\\\"]\" >> /home/ec2-user/prometheus.yml',
+                'echo \"version: \\\"3\\\"\" > /home/ec2-user/docker-compose.yaml',
+                'echo \"services:\" >> /home/ec2-user/docker-compose.yaml',
+                'echo \"  prometheus:\" >> /home/ec2-user/docker-compose.yaml',
+                'echo \"    image: prom/prometheus\" >> /home/ec2-user/docker-compose.yaml',
+                'echo \"    volumes:\" >> /home/ec2-user/docker-compose.yaml',
+                'echo \"      - /home/ec2-user/prometheus.yml:/etc/prometheus/prometheus.yml\" >> /home/ec2-user/docker-compose.yaml',
+                'echo \"    ports:\" >> /home/ec2-user/docker-compose.yaml',
+                'echo \"      - \\\"9090:9090\\\"\" >> /home/ec2-user/docker-compose.yaml',
+                'echo \"  grafana:\" >> /home/ec2-user/docker-compose.yaml',
+                'echo \"    image: grafana/grafana\" >> /home/ec2-user/docker-compose.yaml',
+                'echo \"    ports:\" >> /home/ec2-user/docker-compose.yaml',
+                'echo \"      - \\\"3000:3000\\\"\" >> /home/ec2-user/docker-compose.yaml',
+                'echo \"    environment:\" >> /home/ec2-user/docker-compose.yaml',
+                'echo \"      - GF_SECURITY_ADMIN_USER=admin\" >> /home/ec2-user/docker-compose.yaml',
+                'echo \"      - GF_SECURITY_ADMIN_PASSWORD=admin\" >> /home/ec2-user/docker-compose.yaml',
+                'cd /home/ec2-user && docker-compose up -d'
+              ]" \
+              --region ${{ secrets.AWS_REGION }} \
+              --output text
