@@ -30,7 +30,7 @@ jobs:
         run: |
           pip install -r requirements.txt
           python -m pip install --upgrade pip
-          pip install ansible==8.4.0 boto3>=1.28.0 botocore>=1.31.0
+          pip install ansible>=8.4.0 boto3>=1.28.0 botocore>=1.31.0
 
       - name: ⚙️ Copy env file
         run: |
@@ -111,7 +111,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
           ANSIBLE_CONFIG: ansible/ansible.cfg
         run: |
-          ansible-inventory -i ansible/inventory_ssm.yml --graph
+          ansible-inventory -i ansible/inventory_ssm.yaml --graph
 
       - name: 🚀 Install Prometheus & Grafana (Ansible via SSM)
         env:
@@ -120,4 +120,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
           ANSIBLE_CONFIG: ansible/ansible.cfg
         run: |
-          ansible-playbook -i ansible/inventory_ssm.yml ansible/setup-monitoring.yml
+          ansible-playbook -i ansible/inventory_ssm.yaml ansible/setup-monitoring.yml
