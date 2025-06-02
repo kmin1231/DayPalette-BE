@@ -1,0 +1,4 @@
+plugin: aws_ssm
+region: ap-northeast-2
+filters:
+  "tag:Name": "DayPalette_spb"
