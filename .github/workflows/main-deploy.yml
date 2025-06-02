@@ -86,20 +86,16 @@ jobs:
 
       - name: 🚀 Deploy Spring Boot server to EC2 (via SSM)
         run: |
-          ENV_BASE64="${{ secrets.ENV_BASE64 }}"
-
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
             --comment "Create .env and deploy Spring Boot container" \
             --targets '[{"Key":"tag:Name","Values":["DayPalette_spb"]}]' \
             --parameters commands="[
-              'echo \"$ENV_BASE64\" | base64 -d > /home/ec2-user/.env',
-              'chmod 600 /home/ec2-user/.env',
               'aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPO_URI }}',
               'docker stop ${{ env.CONTAINER_NAME }} || true',
               'docker rm ${{ env.CONTAINER_NAME }} || true',
               'docker pull ${{ secrets.ECR_REPO_URI }}:latest',
-              'docker run -d --name ${{ env.CONTAINER_NAME }} --env-file /home/ec2-user/.env -p ${{ env.SPRING_SERVER_PORT }}:${{ env.SPRING_SERVER_PORT }} ${{ secrets.ECR_REPO_URI }}:latest'
+              'docker run -d --name ${{ env.CONTAINER_NAME }} --env-file ${{ env.ENV_PATH }} -p ${{ env.SPRING_SERVER_PORT }}:${{ env.SPRING_SERVER_PORT }} ${{ secrets.ECR_REPO_URI }}:latest'
             ]" \
             --region ${{ secrets.AWS_REGION }} \
             --output text
