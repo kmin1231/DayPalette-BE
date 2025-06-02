@@ -75,6 +75,12 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+
+          # sample code for bastion host
+          proxy_host: ${{ secrets.BASTION_HOST }}
+          proxy_username: ec2-user
+          proxy_key: ${{ secrets.EC2_SSH_PRIVATE_KEY}}
+          
           source: ".env"
           target: "/home/ec2-user/"
           
@@ -84,6 +90,12 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+
+          # sample code for bastion host
+          proxy_host: ${{ secrets.BASTION_HOST }}
+          proxy_username: ec2-user
+          proxy_key: ${{ secrets.EC2_SSH_PRIVATE_KEY}}
+          
           script: |
             chmod 600 /home/ec2-user/.env
             
