@@ -6,6 +6,7 @@ import com.khu.cloud.diary.core.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -21,5 +22,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleCoreException(CoreException e) {
         return ResponseEntity.status(e.getExceptionType().getStatus())
                 .body(ApiResponse.error(new ErrorMessage(e.getExceptionType())));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiResponse<?>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        ErrorMessage body = new ErrorMessage(ExceptionType.E400_BAD_REQUEST);
+        return ResponseEntity
+                .status(ExceptionType.E400_BAD_REQUEST.getStatus())
+                .body(ApiResponse.error(body));
     }
 }

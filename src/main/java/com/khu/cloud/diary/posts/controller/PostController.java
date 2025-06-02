@@ -26,7 +26,7 @@ public class PostController {
     private final PostDeleteService postDeleteService;
     private final PostLikeService postLikeService;
 
-    // FastAPI 서버에 이미지 생성 요청
+    // Gemini API 호출하여 이미지 생성 요청
     @PostMapping("/create")
     public ResponseEntity<PostCreateResponse> createPost(@RequestBody PostCreateRequest postCreateRequest) {
         PostCreateResponse postCreateResponse = postCreateService.createPost(postCreateRequest);

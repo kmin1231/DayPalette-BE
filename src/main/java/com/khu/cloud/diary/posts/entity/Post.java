@@ -2,12 +2,13 @@
 
 package com.khu.cloud.diary.posts.entity;
 
+import com.khu.cloud.diary.core.basetime.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.khu.cloud.diary.member.entity.Member;
@@ -19,7 +20,7 @@ import com.khu.cloud.diary.member.entity.Member;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Post {
+public class Post extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // auto increment
@@ -27,7 +28,11 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private Member user;
+
+    @Column(nullable = false)
+    private String date;
 
     @Column(nullable = false)
     private String diaryText;
@@ -37,10 +42,6 @@ public class Post {
 
     @Column(nullable = false)
     private String imageUrl;
-
-    @Column(nullable = false, updatable = false)
-    @CreationTimestamp
-    private LocalDateTime createdAt;
 
     @Column(nullable = false)
     @Builder.Default

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthRequest {
-    @Schema(description = "user email", example = "daypalette@cloud.com")
+    @Schema(description = "user email", example = "daypalette2025@gmail.com")
     private String email;
 
     @Schema(description = "user password", example = "cloudcomputing")

@@ -28,7 +28,30 @@ public class PostDetailService {
 
     @Transactional(readOnly = true)
     public ApiResponse<PostDetailResponse> getPostDetail(Long postId, HttpServletRequest request) {
-        
+
+        // ① Post 먼저 찾기
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CoreException(ExceptionType.POST_NOT_FOUND));
+
+        // extract token from HttpServletRequest
+        String token = AuthUtil.resolveTokenOrNull(request);   // 새 util: 없으면 null 반환
+
+        if (token == null) {              // ◀️  익명 사용자인 경우
+            if (!post.isShared())         // 비공개면 차단
+                throw new CoreException(ExceptionType.ACCESS_DENIED);
+        } else {                          // ◀️  로그인 사용자인 경우
+            String email = jwtUtil.extractEmail(token);
+            Member member = memberRepository.findByEmail(email) // 사용자 정보 조회
+                    .orElseThrow(() -> new CoreException(ExceptionType.USER_NOT_FOUND));
+
+            // 사용자 본인이 작성한 글 또는 공개 설정된 post에만 접근 허용
+            if (!post.isShared() &&
+                    !post.getUser().getUserId().equals(member.getUserId())) {
+                throw new CoreException(ExceptionType.ACCESS_DENIED);
+            }
+        }
+
+        /*
         // extract token from HttpServletRequest
         String token = AuthUtil.resolveTokenFromRequest(request);
         String email = jwtUtil.extractEmail(token);
@@ -45,10 +68,12 @@ public class PostDetailService {
         if (!post.getUser().getUserId().equals(member.getUserId()) && !post.isShared()) {
             throw new CoreException(ExceptionType.ACCESS_DENIED);
         }
+        */
 
         // API response object 생성
         PostDetailResponse response = PostDetailResponse.builder()
                 .postId(post.getPostId())
+                .date(post.getDate())
                 .diaryText(post.getDiaryText())
                 // .emoji(post.getEmoji())
                 .imageUrl(post.getImageUrl())
