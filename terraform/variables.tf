@@ -34,11 +34,6 @@ variable "key_name" {
   type        = string
 }
 
-variable "subnet_id" {
-  description = "Subnet ID for EC2"
-  type        = string
-}
-
 variable "ecr_repo_name" {
   description = "ECR repository name"
   type        = string
@@ -47,16 +42,6 @@ variable "ecr_repo_name" {
 variable "s3_bucket_name" {
   description = "S3 Bucket name"
   type        = string
-}
-
-variable "db_subnet_group_name" {
-  description = "RDS DB subnet group name"
-  type        = string
-}
-
-variable "db_security_group_ids" {
-  description = "List of security group IDs for RDS"
-  type        = list(string)
 }
 
 variable "rds_username" {
@@ -68,4 +53,10 @@ variable "rds_password" {
   description = "RDS master password"
   type        = string
   sensitive   = true
+}
+
+variable "vpc_cidr_block" {
+  description = "CIDR block for the VPC"
+  type        = string
+  default     = "10.0.0.0/16"
 }
