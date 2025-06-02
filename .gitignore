@@ -37,3 +37,11 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Terraform ###
+terraform/set_terraform_env.sh
+*.tfstate
+*.tfstate.backup
+terraform.tfstate.*.backup
+*.tfstate.lock.info
+.terraform/
