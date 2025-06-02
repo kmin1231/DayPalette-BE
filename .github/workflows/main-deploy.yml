@@ -1,4 +1,4 @@
-name: "⚙️ CI/CD Pipeline"
+name: "⚙️ CI/CD: EC2 deployment + monitoring setup"
 
 on:
   push:
@@ -103,10 +103,14 @@ jobs:
             --region ${{ secrets.AWS_REGION }} \
             --output text
 
+      - name: 🚀 Install amazon.aws collection
+        run: ansible-galaxy collection install amazon.aws
+
       - name: 🚀 Install Prometheus & Grafana (Ansible via SSM)
-        run: |
-          ansible-playbook -i ansible/inventory_ssm.yml ansible/setup-monitoring.yml
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          ANSIBLE_CONFIG: ansible/ansible.cfg
+        run: |
+          ansible-playbook -i ansible/inventory_ssm.yml ansible/setup-monitoring.yml
