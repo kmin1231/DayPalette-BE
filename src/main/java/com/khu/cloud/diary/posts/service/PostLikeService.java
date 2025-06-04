@@ -27,6 +27,14 @@ public class PostLikeService {
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
 
+    public void increaseLikeCount(Post post) {
+        post.setLikeCount(post.getLikeCount() + 1);
+    }
+
+    public void decreaseLikeCount(Post post) {
+        post.setLikeCount(Math.max(0, post.getLikeCount() - 1));
+    }
+
     @Transactional(readOnly = true)
     public ApiResponse<Boolean> checkIfPostLiked(Long postId, HttpServletRequest request) {
         String token = resolveTokenFromRequest(request);
@@ -67,9 +75,7 @@ public class PostLikeService {
 
         // '좋아요' 추가
         post.getLikedUsers().add(member);
-
-        // update like count
-        post.setLikeCount(post.getLikedUsers().size());
+        this.increaseLikeCount(post);
         
         postRepository.save(post);
 
@@ -106,9 +112,7 @@ public class PostLikeService {
 
         // '좋아요' 취소
         post.getLikedUsers().remove(member);
-
-        // update like count
-        post.setLikeCount(post.getLikedUsers().size());
+        this.decreaseLikeCount(post);
 
         postRepository.save(post);
 

@@ -65,6 +65,9 @@ public class AuthService {
         // JWT token 생성
         String token = jwtUtil.generateToken(member.getEmail());
 
+        System.out.println(">>> [DEBUG] AuthService에서 사용되는 JwtUtil = " + jwtUtil);
+
+
         return new AuthResponse(token);
     }
 }
