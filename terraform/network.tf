@@ -130,3 +130,100 @@ route_table_ids = [
     Name = "S3 VPC Endpoint"
   }
 }
+
+resource "aws_vpc_endpoint" "ssm" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${var.aws_region}.ssm"
+  vpc_endpoint_type = "Interface"
+  subnet_ids        = [aws_subnet.private_subnet_a.id, aws_subnet.private_subnet_c.id]
+  security_group_ids = [aws_security_group.ec2_sg.id]
+
+  private_dns_enabled = true
+
+    policy = <<POLICY
+{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": [
+        "ssm:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+POLICY
+
+  tags = {
+    Name = "SSM VPC Endpoint"
+  }
+}
+
+resource "aws_vpc_endpoint" "ec2messages" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${var.aws_region}.ec2messages"
+  vpc_endpoint_type = "Interface"
+  subnet_ids        = [aws_subnet.private_subnet_a.id, aws_subnet.private_subnet_c.id]
+  security_group_ids = [aws_security_group.ec2_sg.id]
+
+  private_dns_enabled = true
+
+    policy = <<POLICY
+{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": [
+        "ec2messages:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+POLICY
+
+  tags = {
+    Name = "EC2Messages VPC Endpoint"
+  }
+}
+
+resource "aws_vpc_endpoint" "ssmmessages" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${var.aws_region}.ssmmessages"
+  vpc_endpoint_type = "Interface"
+  subnet_ids        = [aws_subnet.private_subnet_a.id, aws_subnet.private_subnet_c.id]
+  security_group_ids = [aws_security_group.ec2_sg.id]
+
+  private_dns_enabled = true
+
+    policy = <<POLICY
+{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": [
+        "ssmmessages:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+POLICY
+
+  tags = {
+    Name = "SSMMessages VPC Endpoint"
+  }
+}
+
+resource "aws_security_group_rule" "allow_https_inbound" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.ec2_sg.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Allow HTTPS inbound from anywhere"
+}

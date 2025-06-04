@@ -9,6 +9,7 @@ resource "aws_db_instance" "rds_db_instance" {
   instance_class            = "db.t4g.micro"
   allocated_storage         = 20
   storage_type              = "gp2"
+  storage_encrypted         = true
   username                  = var.rds_username
   password                  = var.rds_password
   db_name                   = "daypalette_db"
