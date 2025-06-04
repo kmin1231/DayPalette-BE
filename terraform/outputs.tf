@@ -32,3 +32,13 @@ output "alb_dns_name" {
   description = "ALB DNS name"
   value       = aws_lb.app_alb.dns_name
 }
+
+output "bastion_public_ip" {
+  description = "Public IP of Bastion host"
+  value       = aws_instance.bastion_host.public_ip
+}
+
+output "bastion_instance_id" {
+  description = "Instance ID of Bastion host"
+  value       = aws_instance.bastion_host.id
+}
