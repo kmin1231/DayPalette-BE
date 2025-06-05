@@ -66,3 +66,8 @@ variable "bastion_instance_type" {
   type        = string
   default     = "t3.micro"
 }
+
+variable "acm_certificate_arn" {
+  description = "ACM Certificate ARN for ALB HTTPS"
+  type        = string
+}
