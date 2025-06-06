@@ -15,6 +15,7 @@ import com.khu.cloud.diary.member.util.JwtUtil;
 import com.khu.cloud.diary.posts.dto.GenerateImageRequest;
 import com.khu.cloud.diary.posts.dto.GenerateImageResponse;
 import com.khu.cloud.diary.posts.util.S3UploadService;
+import com.khu.cloud.diary.posts.util.TranslationService;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -36,6 +37,7 @@ public class GeminiImageController {
     private final S3UploadService s3UploadService;
     private final JwtUtil jwtUtil;
     private final HttpServletRequest request;
+    private final TranslationService translationService;
 
     @PostMapping("/generate-image")
     public ResponseEntity<?> generateImage(@RequestBody GenerateImageRequest requestDto) throws Exception {
@@ -43,12 +45,15 @@ public class GeminiImageController {
             return ResponseEntity.badRequest().body("Diary text is required");
         }
 
+        // text translation
+        String englishText = translationService.translateToEnglish(requestDto.getDiaryText());
+
         String url = geminiApiUrl + "?key=" + apiKey;
 
         Map<String, Object> requestBody = Map.of(
             "contents", List.of(
                 Map.of("parts", List.of(
-                    Map.of("text", requestDto.getDiaryText() + PROMPT_SUFFIX)
+                    Map.of("text", englishText + PROMPT_SUFFIX)
                 ))
             ),
             "generationConfig", Map.of(
