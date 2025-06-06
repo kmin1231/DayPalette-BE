@@ -77,6 +77,7 @@ jobs:
             --comment "Create .env and deploy Spring Boot container" \
             --targets '[{"Key":"tag:Name","Values":["DayPalette_spb"]}]' \
             --parameters commands="[
+                'docker network create monitoring-net || true',
                 'if [ ! -f /home/ec2-user/.env ]; then',
                 '  SECRET=$(aws secretsmanager get-secret-value --secret-id daypalette-env --region ap-northeast-2 --query SecretString --output text)',
                 '  echo \"$SECRET\" > /home/ec2-user/.env',
@@ -87,7 +88,7 @@ jobs:
                 'docker stop ${{ env.CONTAINER_NAME }} || true',
                 'docker rm ${{ env.CONTAINER_NAME }} || true',
                 'docker pull ${{ secrets.ECR_REPO_URI }}:latest',
-                'docker run -d --name ${{ env.CONTAINER_NAME }} --env-file /home/ec2-user/.env -p ${{ env.SPRING_SERVER_PORT }}:${{ env.SPRING_SERVER_PORT }} ${{ secrets.ECR_REPO_URI }}:latest'
+                'docker run -d --name ${{ env.CONTAINER_NAME }} --network monitoring-net --env-file /home/ec2-user/.env -p ${{ env.SPRING_SERVER_PORT }}:${{ env.SPRING_SERVER_PORT }} ${{ secrets.ECR_REPO_URI }}:latest'
             ]" \
             --region ${{ secrets.AWS_REGION }} \
             --output text
@@ -99,6 +100,7 @@ jobs:
             --comment "Install Prometheus and Grafana via Docker Compose" \
             --targets '[{"Key":"tag:Name","Values":["DayPalette_spb"]}]' \
             --parameters commands="[ \
+              'docker network create monitoring-net || true', \
               'curl -L \"https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose', \
               'chmod +x /usr/local/bin/docker-compose', \
               'echo \"global:\" > /home/ec2-user/prometheus.yml', \
@@ -116,6 +118,8 @@ jobs:
               'echo \"      - /home/ec2-user/prometheus.yml:/etc/prometheus/prometheus.yml\" >> /home/ec2-user/docker-compose.yaml', \
               'echo \"    ports:\" >> /home/ec2-user/docker-compose.yaml', \
               'echo \"      - \\\"9090:9090\\\"\" >> /home/ec2-user/docker-compose.yaml', \
+              'echo \"    networks:\" >> /home/ec2-user/docker-compose.yaml', \
+              'echo \"      - monitoring-net\" >> /home/ec2-user/docker-compose.yaml', \
               'echo \"  grafana:\" >> /home/ec2-user/docker-compose.yaml', \
               'echo \"    image: grafana/grafana\" >> /home/ec2-user/docker-compose.yaml', \
               'echo \"    ports:\" >> /home/ec2-user/docker-compose.yaml', \
@@ -123,6 +127,11 @@ jobs:
               'echo \"    environment:\" >> /home/ec2-user/docker-compose.yaml', \
               'echo \"      - GF_SECURITY_ADMIN_USER=admin\" >> /home/ec2-user/docker-compose.yaml', \
               'echo \"      - GF_SECURITY_ADMIN_PASSWORD=admin\" >> /home/ec2-user/docker-compose.yaml', \
+              'echo \"    networks:\" >> /home/ec2-user/docker-compose.yaml', \
+              'echo \"      - monitoring-net\" >> /home/ec2-user/docker-compose.yaml', \
+              'echo \"networks:\" >> /home/ec2-user/docker-compose.yaml', \
+              'echo \"  monitoring-net:\" >> /home/ec2-user/docker-compose.yaml', \
+              'echo \"    external: true\" >> /home/ec2-user/docker-compose.yaml', \
               'cd /home/ec2-user && docker-compose up -d' \
             ]" \
             --region ${{ secrets.AWS_REGION }} \
