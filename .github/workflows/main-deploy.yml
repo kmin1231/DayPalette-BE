@@ -107,7 +107,7 @@ jobs:
               'echo \"  - job_name: spring-boot\" >> /home/ec2-user/prometheus.yml', \
               'echo \"    metrics_path: /actuator/prometheus\" >> /home/ec2-user/prometheus.yml', \
               'echo \"    static_configs:\" >> /home/ec2-user/prometheus.yml', \
-              'echo \"      - targets: [\\\"localhost:8090\\\"]\" >> /home/ec2-user/prometheus.yml', \
+              'echo \"      - targets: [\\\"daypalette-spring-server:8090\\\"]\" >> /home/ec2-user/prometheus.yml',
               'echo \"version: \\\"3\\\"\" > /home/ec2-user/docker-compose.yaml', \
               'echo \"services:\" >> /home/ec2-user/docker-compose.yaml', \
               'echo \"  prometheus:\" >> /home/ec2-user/docker-compose.yaml', \
