@@ -69,9 +69,9 @@ public class ScheduleController {
         Schedule newSchedule = scheduleService.saveSchedule(scheduleRequest);
         ScheduleResponse response = new ScheduleResponse(
                 newSchedule.getScheduleId(),
-                newSchedule.getContent(),
                 newSchedule.getDate(),
                 newSchedule.getTime(),
+                newSchedule.getContent(),
                 // newSchedule.getEmotion_icon(),
                 newSchedule.getCreatedAt() );
 
@@ -91,9 +91,9 @@ public class ScheduleController {
         Schedule schedule = scheduleService.editSchedule(scheduleId, scheduleRequest);
         ScheduleResponse response = new ScheduleResponse(
                 schedule.getScheduleId(),
-                schedule.getContent(),
                 schedule.getDate(),
                 schedule.getTime(),
+                schedule.getContent(),
                 // schedule.getEmotion_icon(),
                 schedule.getCreatedAt());
 

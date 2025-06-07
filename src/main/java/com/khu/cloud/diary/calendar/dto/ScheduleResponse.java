@@ -18,7 +18,7 @@ public class ScheduleResponse {
     // private String emotionIcon;
     private LocalDateTime createdAt;
 
-    public ScheduleResponse(Long scheduleId, String content, String date, String time, LocalDateTime createdAt){
+    public ScheduleResponse(Long scheduleId, String date, String time, String content, LocalDateTime createdAt){
         this.scheduleId = scheduleId;
         this.content = content;
         this.date = date;
