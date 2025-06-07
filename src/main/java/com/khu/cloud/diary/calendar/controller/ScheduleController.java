@@ -35,11 +35,12 @@ public class ScheduleController {
         List<Schedule> schedules = scheduleService.getAllScheduleByUserId();
         List<ScheduleResponse> response = schedules.stream()
                         .map(schedule-> ScheduleResponse.builder()
-                            .scheduleId(schedule.getScheduleId())
-                            .date(schedule.getDate())
-                            .time(schedule.getTime())
-                            .content(schedule.getContent())
-                            .build())
+                                .scheduleId(schedule.getScheduleId())
+                                .date(schedule.getDate())
+                                .time(schedule.getTime())
+                                .content(schedule.getContent())
+                                .createdAt(schedule.getCreatedAt())
+                                .build())
                         .collect(Collectors.toList());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
