@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/calendar")
@@ -29,6 +30,19 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
     private final PostMineService postService;
 
+    @GetMapping("/schedules")
+    public ResponseEntity<List<ScheduleResponse>> getAllSchedules(){
+        List<Schedule> schedules = scheduleService.getAllScheduleByUserId();
+        List<ScheduleResponse> response = schedules.stream()
+                        .map(schedule-> ScheduleResponse.builder()
+                            .scheduleId(schedule.getScheduleId())
+                            .date(schedule.getDate())
+                            .time(schedule.getTime())
+                            .content(schedule.getContent())
+                            .build())
+                        .collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
     @GetMapping("/{date}")
     public ResponseEntity<PostAndScheduleResponse> getScheduleAndPost(@PathVariable String date) {
         /*
