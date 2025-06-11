@@ -88,7 +88,7 @@ jobs:
                 'docker stop ${{ env.CONTAINER_NAME }} || true',
                 'docker rm ${{ env.CONTAINER_NAME }} || true',
                 'docker pull ${{ secrets.ECR_REPO_URI }}:latest',
-                'docker run -d --name ${{ env.CONTAINER_NAME }} --network monitoring-net --env-file /home/ec2-user/.env -p ${{ env.SPRING_SERVER_PORT }}:${{ env.SPRING_SERVER_PORT }} ${{ secrets.ECR_REPO_URI }}:latest'
+                'docker run -d --name ${{ env.CONTAINER_NAME }} --env-file /home/ec2-user/.env -p ${{ env.SPRING_SERVER_PORT }}:${{ env.SPRING_SERVER_PORT }} ${{ secrets.ECR_REPO_URI }}:latest'
             ]" \
             --region ${{ secrets.AWS_REGION }} \
             --output text
