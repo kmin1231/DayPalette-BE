@@ -1,9 +1,9 @@
 name: "⚙️ CI/CD: EC2 deployment + monitoring setup"
 
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   workflow_dispatch:
 
 env:
